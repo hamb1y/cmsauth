@@ -1,0 +1,1 @@
+<svelte:head><title>Sites · cmsauth</title></svelte:head><main><a href="/admin">← Admin</a><h1>Sites</h1><p>Site configuration is stored in Postgres. Use the config endpoint to copy a tenant-specific Sveltia snippet.</p></main><style>main{max-width:720px;margin:3rem auto;font:16px system-ui}a{color:#1261a0}</style>

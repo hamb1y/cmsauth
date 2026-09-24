@@ -1,0 +1,7 @@
+export type Role = 'admin' | 'editor' | 'author' | 'viewer';
+export type ProviderName = 'github' | 'gitlab' | 'gitea';
+export interface Site { id: string; tenantId: string; label: string; repo: string; branch: string; provider: ProviderName; apiRoot: string; allowedOrigins: string[]; credentialRef: string | null; enabled: boolean; settings: Record<string, unknown>; }
+export interface User { id: string; email: string; name: string; login: string; htmlUrl: string; }
+export interface SessionContext { id: string; userId: string; siteId: string; role: Role; user: User; expiresAt: Date; }
+export interface GitResponse { status: number; headers?: HeadersInit; body: string | Uint8Array; }
+export interface GitProvider { getRepo(repo: string): Promise<GitResponse>; getFile(repo: string, path: string, ref?: string): Promise<GitResponse>; putFile(repo: string, path: string, input: unknown): Promise<GitResponse>; deleteFile(repo: string, path: string, input: unknown): Promise<GitResponse>; listTree(repo: string, ref?: string): Promise<GitResponse>; createPullRequest(repo: string, input: unknown): Promise<GitResponse>; getPullRequest(repo: string, number: string): Promise<GitResponse>; updatePullRequest(repo: string, number: string, input: unknown): Promise<GitResponse>; mergePullRequest(repo: string, number: string, input: unknown): Promise<GitResponse>; getBranchHead(repo: string, branch: string): Promise<GitResponse>; raw(method: string, path: string, body: Uint8Array | null, headers: Headers): Promise<GitResponse>; }

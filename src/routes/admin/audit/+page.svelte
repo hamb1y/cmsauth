@@ -1,0 +1,1 @@
+<svelte:head><title>Audit · cmsauth</title></svelte:head><main><a href="/admin">← Admin</a><h1>Audit</h1><p>Proxy writes are recorded by site and user without request bodies or credentials.</p></main><style>main{max-width:720px;margin:3rem auto;font:16px system-ui}a{color:#1261a0}</style>

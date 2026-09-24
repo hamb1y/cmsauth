@@ -1,0 +1,8 @@
+backend:
+  name: github
+  repo: hamb1y/jnvckm
+  branch: main
+  base_url: https://auth.example.org
+  api_root: https://auth.example.org/gh/hamb1y/jnvckm
+  auth_methods: [oauth]
+  open_authoring: false

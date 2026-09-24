@@ -1,0 +1,4 @@
+import { json } from '@sveltejs/kit';
+import { addSite, listSites } from '$lib/server/sites';
+export const GET = async () => json({ sites: await listSites() });
+export const POST = async ({ request, url }) => { const body = await request.json(); if (!body.repo || !body.label) return json({ error: 'label and repo are required' }, { status: 400 }); const repo = String(body.repo); const site = { id: crypto.randomUUID(), tenantId: String(body.tenantId ?? repo.split('/')[0]), label: String(body.label), repo, branch: String(body.branch ?? 'main'), provider: body.provider ?? 'github', apiRoot: `${url.origin}/gh/${repo}`, allowedOrigins: Array.isArray(body.allowedOrigins) ? body.allowedOrigins : [url.origin], credentialRef: body.credentialRef ?? null, enabled: true, settings: {} }; await addSite(site); return json({ site }, { status: 201 }); };

@@ -1,15 +1,14 @@
-FROM node:22-alpine AS build
+FROM oven/bun:1.4-alpine AS build
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 COPY . .
-RUN npm run check && npm run build
-FROM node:22-alpine
+RUN bun run check && bun run build
+FROM oven/bun:1.4-alpine
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=build /app/build ./build
-COPY --from=build /app/package*.json ./
+COPY --from=build /app/.vercel/output ./.vercel/output
+COPY --from=build /app/package.json ./
 COPY --from=build /app/migrations ./migrations
-RUN npm install --omit=dev
 EXPOSE 3000
-CMD ["node", "build"]
+CMD ["bun", "run", "preview"]

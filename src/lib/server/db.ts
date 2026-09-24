@@ -1,3 +1,2 @@
-import { Pool } from 'pg';
-export interface Db { query<T = Record<string, unknown>>(text: string, values?: unknown[]): Promise<{ rows: T[] }>; transaction<T>(fn: (db: Db) => Promise<T>): Promise<T>; }
-export class PgDb implements Db { constructor(private pool: any = new Pool({ connectionString: process.env.DATABASE_URL })) {} async query<T = Record<string, unknown>>(text: string, values: unknown[] = []) { return this.pool.query(text, values) as Promise<{ rows: T[] }>; } async transaction<T>(fn: (db: Db) => Promise<T>): Promise<T> { const client = await this.pool.connect(); try { await client.query('BEGIN'); const db: Db = { query: (text, values = []) => client.query(text, values), transaction: (nested) => nested(db) }; const result = await fn(db); await client.query('COMMIT'); return result; } catch (error) { await client.query('ROLLBACK'); throw error; } finally { client.release(); } } }
+export { SqliteDb, db } from './sqlite';
+export type { Db } from './sqlite';

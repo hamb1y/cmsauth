@@ -5,19 +5,19 @@
 ## Run locally
 
 ```sh
-npm install
+bun install
 cp .env.example .env
-npm run check
-npm test
-npm run build
-npm run dev
+bun run check
+bun test
+bun run build
+bun run dev
 ```
 
 Set `DATABASE_URL` and run `npm run migrate` before enabling the persistent adapters. The checked-in pilot config is at [`public/admin/config.yml`](public/admin/config.yml). It is the only site-facing change required.
 
 ## Architecture seams
 
-- `Db` in `src/lib/server/db.ts` is SQL-only and has a Postgres adapter.
+- `Db` in `src/lib/server/sqlite.ts` is SQL-only and has a SQLite/Turso adapter.
 - `GitProvider` in `src/lib/server/types.ts` is implemented by the GitHub adapter and the generic HTTP/GitLab adapters.
 - `GitCredential` in `src/lib/server/credential.ts` is the seam for GitHub App installation tokens.
 - Password, TOTP, OAuth, and mail delivery are kept behind service modules so provider changes do not alter proxy authorization.
@@ -28,7 +28,7 @@ The proxy derives the site from `/gh/{owner}/{repo}`, checks the configured repo
 
 The included [`Dockerfile`](Dockerfile) runs on a container host. [`vercel.json`](vercel.json) targets Vercel's Node runtime. Run the idempotent SQL migration during deployment. Vercel's Node function request body limit is 4.5 MB, so site owners should keep CMS media below that limit.
 
-SQLite/Turso would require a new `Db` adapter, migration dialect, and transaction/error semantics; no business or proxy code should change.
+The deployed adapter uses SQLite-compatible Turso/libSQL because Vercel instances do not share a durable local filesystem. For a persistent-disk container, the same SQL can use a local SQLite file.
 
 ## Current delivery
 
